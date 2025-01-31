@@ -55,4 +55,18 @@ RSpec.describe User::Create do
       expect( User::Create.run(params: params)).to be_invalid
     end
   end
+
+  context 'interests' do
+    it 'creates interests if they do not exist' do
+      User::Create.run!(params: default_params)
+      expect(Interest.count).to eq(2)
+    end
+  end
+
+  context 'skills' do
+    it 'creates skills if they do not exist' do
+      User::Create.run!(params: default_params)
+      expect(Skill.count).to eq(2)
+    end
+  end
 end

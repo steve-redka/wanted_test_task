@@ -21,8 +21,10 @@ class User::Create < ActiveInteraction::Base
   def execute
     user = User.create!(params.except(:interests, :skills))
 
-    user.interests = Interest.where(name: params[:interests])
-    user.skills = Skill.where(name: params[:skills])
+    # This isn't mentioned in tasks, but it doesn't make sense that interests and skills aren't created if they don't exist
+    # prior to creating a user. So I added this code to create interests and skills if they don't exist.
+    params[:interests].map { |interest| Interest.find_or_create_by(name: interest) }
+    params[:skills].map { |skill| Skill.find_or_create_by(name: skill) }
 
     user.save!
     user
